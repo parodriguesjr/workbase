@@ -26,15 +26,35 @@
     <section class="content">
         <div class="container-fluid">
 
+            {{-- Bloco inserido aqui para exibir as mensagens do Controller (Cadastro e Edição) --}}
+            @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="icon fas fa-check"></i> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+{{-- Bloco para exibir mensagens de Exclusão/Erro (Vermelho) --}}
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="icon fas fa-ban"></i> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
             <div class="card">
                 <div class="card-header d-flex align-items-center">
                     <!-- Título da Lista -->
                     <h3 class="card-title mr-3">Lista de Usuários</h3>
 
                     <!-- Botão de Inclusão ao lado do título -->
-                    <a href="{{ route('usuarios.create') }}" class="btn btn-success">
-    <i class="fas fa-plus"></i> Novo Registro
-</a>
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalNovoUsuario">
+                        <i class="fas fa-plus"></i> Novo Usuário
+                    </a>
 
                     <!-- Caixa de Pesquisa alinhada à direita -->
                     <div class="card-tools ml-auto">
@@ -76,46 +96,40 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tbody>
-                                @forelse($users as $usuario)
-                                    <tr>
-                                        <td>{{ $usuario->id }}</td>
-                                        <td>{{ $usuario->name }}</td>
-                                        <td>{{ $usuario->email }}</td>
-                                        <td>
-                                            <!-- Botão Editar -->
-                                            <a href="{{ route('usuarios.edit', $usuario->id) }}"
-                                               class="btn btn-sm btn-info"
-                                               title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                            
-                                            <!-- Formulário Excluir -->
-                                            <form action="{{ route('usuarios.destroy', $usuario->id) }}"
-                                                  method="POST"
-                                                  style="display:inline-block;">
-                                                @csrf
-                                                @method('DELETE')
-                            
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-danger"
-                                                        title="Excluir"
-                                                        onclick="return confirm('Tem certeza que deseja excluir?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center">
-                                            Nenhum usuário encontrado.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
+                            @forelse($users as $usuario)
+                                <tr>
+                                    <td>{{ $usuario->id }}</td>
+                                    <td>{{ $usuario->name }}</td>
+                                    <td>{{ $usuario->email }}</td>
+                                    <td>
+                                        <!-- Botão Editar -->
+                                        <a href="{{ route('usuarios.edit', $usuario->id) }}"
+                                            class="btn btn-info">
+                                         
+                                             <i class="fas fa-edit"></i>
+                                         
+                                         </a>
                         
+                                        <!-- Formulário Excluir -->
+                                        <button
+    type="button"
+    class="btn btn-danger"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteModal"
+    data-id="{{ $usuario->id }}"
+    data-nome="{{ $usuario->name }}"
+>
+    <i class="fas fa-trash"></i>
+</button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        Nenhum usuário encontrado.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -128,4 +142,71 @@
             </div>
         </div>
     </section>
+    @include('usuarios.create')
 @endsection
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    Confirmar Exclusão
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Deseja realmente excluir o usuário:
+
+                <strong id="nomeUsuario"></strong> ?
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <form id="formDelete" method="POST">
+
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="btn btn-danger">
+                        Sim, excluir
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+
+        const button = event.relatedTarget;
+
+        const userId = button.getAttribute('data-id');
+        const userName = button.getAttribute('data-nome');
+
+        document.getElementById('nomeUsuario').textContent = userName;
+
+        const form = document.getElementById('formDelete');
+
+        form.action = `/users/${userId}`;
+
+    });
+</script>

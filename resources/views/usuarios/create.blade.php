@@ -1,54 +1,40 @@
 {{-- resources/views/usuarios/create.blade.php --}}
 
-@extends('layout')
-
-@section('title', 'Novo Usuário')
-
-@section('content')
-
-<!-- Content Header -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Novo Registro</h1>
+<div class="modal fade" id="modalNovoUsuario" tabindex="-1" role="dialog" aria-labelledby="modalNovoUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content card card-primary card-outline"> {{-- Mantém a bordinha azul do AdminLTE --}}
+            
+            <!-- Cabeçalho do Modal -->
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-dark" id="modalNovoUsuarioLabel">
+                    <i class="fas fa-user-plus text-primary mr-2"></i> Cadastro de Usuário
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
 
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('usuarios.index') }}">Usuários</a>
-                    </li>
-                    <li class="breadcrumb-item active">Novo Registro</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Main content -->
-<section class="content">
-
-    <div class="container-fluid">
-
-        <div class="card card-primary card-outline">
-
-            <div class="card-header">
-                <h3 class="card-title">
-                    Cadastro de Usuário
-                </h3>
-            </div>
-
+            <!-- Formulário -->
             <form action="{{ route('usuarios.store') }}" method="POST">
-
                 @csrf
 
-                <div class="card-body">
+                <!-- Corpo do Modal -->
+                <div class="modal-body">
+                    
+                    {{-- Bloco para exibir erros rápidos caso queira usar --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     {{-- Nome --}}
                     <div class="form-group">
                         <label for="name">Nome do Usuário</label>
-
                         <input
                             type="text"
                             name="name"
@@ -62,7 +48,6 @@
                     {{-- E-mail --}}
                     <div class="form-group">
                         <label for="email">E-mail</label>
-
                         <input
                             type="email"
                             name="email"
@@ -75,24 +60,19 @@
 
                 </div>
 
-                <div class="card-footer">
-
+                <!-- Rodapé do Modal (Usando seus botões originais adaptados) -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-save"></i> Salvar
                     </button>
-
-                    <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">
-    Cancelar
-</a>
-
                 </div>
 
             </form>
 
         </div>
-
     </div>
-
-</section>
-
-@endsection
+</div>

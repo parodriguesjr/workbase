@@ -7,9 +7,14 @@
   @include('partials.head')
   {{-- A diretiva @stack do Blade permite adicionar estilos específicos de uma página --}}
   @stack('styles')
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <!-- acrescentada a opção  layout-footer-fixed do Bootstrap para rolar a página sem esconder o rodapé-->
+<link rel="stylesheet"
 
 <body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
 
@@ -200,6 +205,7 @@
     @include('partials.scripts')
     {{-- A diretiva @stack do Blade permite adicionar scripts específicos de uma página --}}
     @stack('styles')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

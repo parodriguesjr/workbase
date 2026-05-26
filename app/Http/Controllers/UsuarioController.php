@@ -76,8 +76,8 @@ class UsuarioController extends Controller
         ]);
 
         return redirect()
-            ->route('usuarios.index')
-            ->with('success', 'Usuário atualizado!');
+    ->back() // Isso faz voltar para a mesma tela de edição
+    ->with('success', 'Usuário atualizado!');
     }
 
     // EXCLUIR
@@ -88,7 +88,7 @@ class UsuarioController extends Controller
         $usuario->delete();
 
         return redirect()
-            ->route('usuarios.index')
-            ->with('success', 'Usuário excluído!');
+        ->route('usuarios.index')
+        ->with('error', 'Usuário excluído com sucesso!');
     }
 }
